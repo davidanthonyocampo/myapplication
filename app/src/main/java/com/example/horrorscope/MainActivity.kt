@@ -14,40 +14,56 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
+            if(visibility and View.SYSTEM_UI_FLAG_FULLSCREEN ==0) {hideSystemUI()} else {hideSystemUI()}
+        }
+
         val horrorScopes = arrayOf(
-            "Aquarius            (Jan 20 - Feb 18)",
-            "Pisces                (Feb 19 - Mar 20)",
-            "Aries                   (Mar 21 - Apr 19)",
-            "Taurus              (Apr 20 - May 20)",
-            "Gemini              (May 21 - Jun 21)",
-            "Cancer           (Jun 22 - Jul 22)",
-            "Leo             (Jul 23 - Aug 22)",
-            "Virgo            (Aug 23 - Sep 22)",
-            "Libra            (Sep 23 - Oct 22)",
-            "Scorpio           (Oct 23 - Nov 21)",
-            "Sagittarius            (Nov 22 - Dec 21)",
-            "Capricorn          (Dec 22 - Jan 19)"
+            "Aquarius",
+            "Pisces",
+            "Aries",
+            "Taurus",
+            "Gemini",
+            "Cancer",
+            "Leo",
+            "Virgo",
+            "Libra",
+            "Scorpio",
+            "Sagittarius",
+            "Capricorn"
         )
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, horrorScopes)
 
         spinner.adapter = arrayAdapter
 
-        spinner.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {
-
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-
             }
         }
 
         button.setOnClickListener {
-
+            val sendText = spinner.selectedItem.toString()
             val intent = Intent(this, MainActivity2::class.java)
+            intent.putExtra("sentText",sendText)
             startActivity(intent)
         }
 
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if(hasFocus) hideSystemUI()
+    }
+
+    private fun hideSystemUI() {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 }
